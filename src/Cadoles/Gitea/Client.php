@@ -54,7 +54,7 @@ class Client
 
     public function request(string $uri = '', string $method = 'GET', array $options = []): ResponseInterface
     {
-        $uri = $this->config['base_uri'] . self::BASE_URI . $uri;
+        $uri = $this->baseUri . self::BASE_URI . $uri;
 
         if (!empty($this->config['query'])) {
             $options['query'] = isset($options['query'])
