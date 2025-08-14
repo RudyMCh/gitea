@@ -1,7 +1,7 @@
 {
     "name": "cadoles/gitea",
-    "description": "Gitea API",
-    "type": "library",
+    "description": "Symfony Bundle for Gitea API Client",
+    "type": "symfony-bundle",
     "homepage": "https://www.cadoles.com",
     "license": ["MIT"],
     "require": {
@@ -11,8 +11,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Cadoles\\Gitea\\": "Classes"
-        }
+            "Cadoles\\GiteaBundle\\": "src/Cadoles/GiteaBundle/",
+            "Cadoles\\Gitea\\": "src/Cadoles/Gitea/"        }
     },
     "extra": {
         "neos": {

@@ -1,7 +1,7 @@
 # Gitea API Client
 
 This package provides an API client for [Gitea](https://gitea.io) API Version 1.
-This package use the source of https://github.com/Cadoles/Gitea
+This package use the source of https://github.com/RudyMCH/Gitea
 ## Getting Started
 
 ### Prerequisites
