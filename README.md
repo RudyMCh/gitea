@@ -71,16 +71,11 @@ see the [tags on this repository](https://github.com/Cadoles/gitea/contributors)
 
 ## Authors
 
-* Michael Gerdemann - [Cadoles GmbH](https://www.Cadoles.de)
-
-See also the list of [contributors](https://github.com/Cadoles/gitea/graphs/contributors) who
-participated in this project.
+* Rudy Masson (base on the work of Michael Gerdemann) - [Cadoles GmbH](https://www.cadoles.com)
 
 ## License
 
-This project is licensed under the MIT License - see the
-[LICENSE.md](https://github.com/Cadoles/gitea//blob/master/LICENSE.md) file for details
-
+This project is licensed under the MIT License
 ## Status of endpoints
 
 #### Admin
