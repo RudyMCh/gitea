@@ -1,0 +1,22 @@
+{
+    "name": "cadoles/gitea",
+    "description": "Gitea API",
+    "type": "library",
+    "homepage": "https://www.cadoles.com",
+    "license": ["MIT"],
+    "require": {
+        "php": "^8.0",
+        "symfony/http-client": "^6.3",
+        "symfony/contracts": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cadoles\\Gitea\\": "Classes"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Cadoles.Gitea"
+        }
+    }
+}

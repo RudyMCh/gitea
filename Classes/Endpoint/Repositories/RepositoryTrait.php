@@ -1,0 +1,248 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Cadoles\Gitea\Endpoint\Repositories;
+
+use Cadoles\Gitea\Client;
+
+/**
+ * Repositories Repository Trait
+ */
+trait RepositoryTrait
+{
+    public function migrate(
+        string $cloneAddr,
+        string $repoName,
+        int $uid,
+        ?string $authPassword = null,
+        ?string $authUsername = null,
+        string $description = '',
+        bool $issues = true,
+        bool $labels = true,
+        bool $milestones = true,
+        bool $mirror = true,
+        bool $private = true,
+        bool $pullRequests = true,
+        bool $releases = true,
+        bool $wiki = true
+    ): array
+    {
+        $options = [
+            'json' => [
+                'clone_addr' => $cloneAddr,
+                'repo_name' => $repoName,
+                'uid' => $uid,
+                'auth_password' => $authPassword,
+                'auth_username' => $authUsername,
+                'description' => $description,
+                'issues' => $issues,
+                'labels' => $labels,
+                'milestones' => $milestones,
+                'mirror' => $mirror,
+                'private' => $private,
+                'pull_requests' => $pullRequests,
+                'releases' => $releases,
+                'wiki' => $wiki,
+            ]
+        ];
+
+        $options['json'] = $this->removeNullValues($options['json']);
+        $response = $this->client->request(self::BASE_URI . '/migrate', 'POST', $options);
+        return $response->toArray();
+    }
+
+    public function search(
+        string $query,
+        ?bool $topic = null,
+        ?bool $includeDesc = null,
+        ?int $uid = null,
+        ?int $priorityOwnerId = null,
+        ?int $starredBy = null,
+        ?bool $private = null,
+        ?bool $template = null,
+        ?int $page = null,
+        ?int $limit = null,
+        ?string $mode = null,
+        ?bool $exclusive = null,
+        ?string $sort = null,
+        ?string $order = null
+    ): array
+    {
+        $options['query'] = [
+            'query' => $query,
+            'topic' => $topic,
+            'includeDesc' => $includeDesc,
+            'uid' => $uid,
+            'priorityOwnerId' => $priorityOwnerId,
+            'starredBy' => $starredBy,
+            'private' => $private,
+            'template' => $template,
+            'page' => $page,
+            'limit' => $limit,
+            'mode' => $mode,
+            'exclusive' => $exclusive,
+            'sort' => $sort,
+            'order' => $order,
+        ];
+        $options['query'] = $this->removeNullValues($options['query']);
+
+        $response = $this->client->request(self::BASE_URI . '/search', 'GET', $options);
+        return $response->toArray();
+    }
+
+    public function get(string $owner, string $repositoryName): array
+    {
+        $response = $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName);
+        return $response->toArray();
+    }
+
+    public function delete(string $owner, string $repositoryName): bool
+    {
+        $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName, 'DELETE');
+        return true;
+    }
+
+    public function update(
+        string $owner,
+        string $repositoryName,
+        ?bool $allow_merge_commits = null,
+        ?bool $allow_rebase = null,
+        ?bool $allow_rebase_explicit = null,
+        ?bool $allow_squash_merge = null,
+        ?bool $archived = null,
+        ?string $default_branch = null,
+        ?string $description = null,
+        ?string $external_tracker_format = null,
+        ?string $external_tracker_style = null,
+        ?string $external_tracker_url = null,
+        ?string $external_wiki_url = null,
+        ?bool $has_issues = null,
+        ?bool $has_pull_requests = null,
+        ?bool $has_wiki = null,
+        ?bool $ignore_whitespace_conflicts = null,
+        ?bool $allow_only_contributors_to_track_time = null,
+        ?bool $enable_issue_dependencies = null,
+        ?bool $enable_time_tracker = null,
+        ?string $name = null,
+        ?bool $private = null,
+        ?bool $template = null,
+        ?string $website = null
+    ): array
+    {
+        $options['json'] = [
+            'allow_merge_commits' => $allow_merge_commits,
+            'allow_rebase' => $allow_rebase,
+            'allow_rebase_explicit' => $allow_rebase_explicit,
+            'allow_squash_merge' => $allow_squash_merge,
+            'archived' => $archived,
+            'default_branch' => $default_branch,
+            'description' => $description,
+            'external_tracker' => [
+                'external_tracker_format' => $external_tracker_format,
+                'external_tracker_style' => $external_tracker_style,
+                'external_tracker_url' => $external_tracker_url,
+            ],
+            'external_wiki' => [
+                'external_wiki_url' => $external_wiki_url,
+            ],
+            'has_issues' => $has_issues,
+            'has_pull_requests' => $has_pull_requests,
+            'has_wiki' => $has_wiki,
+            'ignore_whitespace_conflicts' => $ignore_whitespace_conflicts,
+            'internal_tracker' => [
+                'allow_only_contributors_to_track_time' => $allow_only_contributors_to_track_time,
+                'enable_issue_dependencies' => $enable_issue_dependencies,
+                'enable_time_tracker' => $enable_time_tracker,
+            ],
+            'name' => $name,
+            'private' => $private,
+            'template' => $template,
+            'website' => $website,
+        ];
+        $options['json'] = $this->removeNullValues($options['json']);
+
+        $response = $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName, 'PATCH', $options);
+        return $response->toArray();
+    }
+
+    public function mirrorSync(string $owner, string $repositoryName): bool
+    {
+        $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName . '/mirror-sync', 'POST');
+
+        return true;
+    }
+
+    public function getSigningKeyGPG(string $owner, string $repositoryName): string
+    {
+        $response = $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName . '/signing-key.gpg');
+
+        return (string)$response->getBody();
+    }
+
+    public function getStargazers(string $owner, string $repositoryName): array
+    {
+        $response = $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName . '/stargazers');
+
+        return $response->toArray();
+    }
+
+    public function getTags(string $owner, string $repositoryName): array
+    {
+        $response = $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName . '/tags');
+
+        return $response->toArray();
+    }
+
+    public function getTimes(string $owner, string $repositoryName): array
+    {
+        $response = $this->client->request(self::BASE_URI . '/' . $owner . '/' . $repositoryName . '/times');
+
+        return $response->toArray();
+    }
+
+    public function getById(int $id): array
+    {
+        $response = $this->client->request('/repositories/' . $id);
+        return $response->toArray();
+    }
+
+    public function topicsSearch(string $searchTerm): array
+    {
+        $options['query'] = [
+            'q' => $searchTerm
+        ];
+
+        $response = $this->client->request('/topics/search', 'GET', $options);
+
+        return $response->toArray();
+    }
+
+    public function create(
+        string $name,
+        ?bool $autoInit = null,
+        ?string $description = null,
+        ?string $gitignores = null,
+        ?string $issueLabels = null,
+        ?string $license = null,
+        ?bool $private = null,
+        ?string $readme = null
+    ): array
+    {
+        $options['json'] = [
+            'name' => $name,
+            'auto_init' => $autoInit,
+            'description' => $description,
+            'gitignores' => $gitignores,
+            'issue_labels' => $issueLabels,
+            'license' => $license,
+            'private' => $private,
+            'readme' => $readme,
+        ];
+        $options['json'] = $this->removeNullValues($options['json']);
+
+        $response = $this->client->request('/user/repos', 'POST', $options);
+
+        return $response->toArray();
+    }
+}
