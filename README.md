@@ -15,7 +15,7 @@ This package has the following requirements:
 Install latest version via composer:
 
 ```
-composer require RudyMCh/gitea
+composer require cadoles/gitea
 ```
 
 ### Basic usage
